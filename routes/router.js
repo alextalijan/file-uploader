@@ -27,5 +27,6 @@ router.post(
   upload.array('files', 10),
   controller.uploadFilePost
 );
+router.get('/folders/new', isLoggedIn, controller.newFolderGet);
 
 module.exports = router;

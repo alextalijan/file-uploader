@@ -9,6 +9,7 @@
     <a href="/logout">Log Out</a>
     <h1>Welcome, <%= user.username %>!</h1>
     <p>Click on the link to <a href="/upload">upload a new file</a>.</p>
+    <a href="/folders/new">Add New Folder</a>
     <% if (docs.length > 0) { %>
       <% docs.forEach(document => { %>
           <!-- Differentiate between folders and files -->

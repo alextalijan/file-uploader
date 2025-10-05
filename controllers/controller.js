@@ -169,4 +169,7 @@ module.exports = {
 
     res.redirect('/');
   },
+  newFolderGet: (req, res) => {
+    res.render('newFolder');
+  },
 };
