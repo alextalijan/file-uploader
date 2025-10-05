@@ -7,7 +7,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const router = require('./routes/router');
+const indexRouter = require('./routes/indexRouter');
+const folderRouter = require('./routes/folderRouter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -100,7 +101,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', router);
+app.use('/', indexRouter);
+app.use('/folders', folderRouter);
 
 // Error catching middleware
 app.use((err, req, res, next) => {
