@@ -32,8 +32,22 @@ const registerValidations = [
 const prisma = new PrismaClient();
 
 module.exports = {
-  indexGet: (req, res) => {
-    res.render('index');
+  indexGet: async (req, res) => {
+    const folders = await prisma.folder.findMany({
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    const soloFiles = await prisma.file.findMany({
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    const docs = [...folders, ...soloFiles];
+
+    res.render('index', { docs });
   },
   registerGet: (req, res) => {
     res.render('register', { errors: null });
@@ -127,16 +141,32 @@ module.exports = {
       folder = req.body.folder;
     }
 
-    // Insert each file into database
-    req.files.forEach(async (file) => {
-      await prisma.file.create({
-        data: {
-          name: file.originalname,
-          url: file.path,
-          sizeInBytes: file.size,
-          folderId: folder,
-        },
+    // If a folder was provided, insert all files into that folder
+    if (folder) {
+      req.files.forEach(async (file) => {
+        await prisma.file.create({
+          data: {
+            name: file.originalname,
+            url: file.path,
+            sizeInBytes: file.size,
+            folderId: folder,
+          },
+        });
       });
-    });
+    } else {
+      // Else, add these files to the user without having a parent folder
+      req.files.forEach(async (file) => {
+        await prisma.file.create({
+          data: {
+            name: file.originalname,
+            url: file.path,
+            sizeInBytes: file.size,
+            userId: req.user.id,
+          },
+        });
+      });
+    }
+
+    res.redirect('/');
   },
 };
