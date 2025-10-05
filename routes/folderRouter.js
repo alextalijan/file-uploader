@@ -6,5 +6,6 @@ const router = Router();
 
 router.get('/new', isLoggedIn, controller.newFolderGet);
 router.post('/new', isLoggedIn, controller.newFolderPost);
+router.get('/:folderName/edit', isLoggedIn, controller.editFolderGet);
 
 module.exports = router;

@@ -31,4 +31,14 @@ module.exports = {
 
     res.redirect('/');
   },
+  editFolderGet: async (req, res) => {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        name: req.params.folderName,
+        userId: req.user.id,
+      },
+    });
+
+    res.render('editFolder', { folder });
+  },
 };

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Folder</title>
+  </head>
+  <body>
+    <h1><%= folder.name %></h1>
+    <h2>Rename</h2>
+    <form action="/<%= folder.name %>/edit" method="POST">
+      <label for="rename">New Name:</label>
+      <input type="text" name="rename" id="rename" />
+      <button>Rename</button>
+    </form>
+    <h2>Delete</h2>
+    <p>
+      Deleting a folder will not delete the files within. They will just be left
+      fatherless.
+    </p>
+    <form action="/<%= folder.name %>/delete" method="POST">
+      <button type="submit">Delete</button>
+    </form>
+  </body>
+</html>
