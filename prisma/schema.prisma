@@ -20,3 +20,9 @@ model Session {
   data      String
   expiresAt DateTime
 }
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  hash     String
+}
