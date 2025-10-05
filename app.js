@@ -3,6 +3,9 @@ require('dotenv').config();
 const session = require('express-session');
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +32,58 @@ app.use(
 );
 
 // Set up passport local strategy
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    const prisma = new PrismaClient();
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: {
+          username: username,
+        },
+      });
+    } catch (err) {
+      done(err);
+    }
+
+    if (!user) {
+      return done(null, false, { message: "User doesn't exist." });
+    }
+
+    let passwordMatch;
+    try {
+      passwordMatch = await bcrypt.compare(password, user.hash);
+    } catch (err) {
+      done(err);
+    }
+
+    if (!passwordMatch) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+
+    return done(null, user);
+  })
+);
+
+app.use(passport.session());
+
+// Add functions for serializing and deserializing users
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
 
 app.get('/', controller.indexGet);
 
