@@ -11,19 +11,21 @@
     <p>Click on the link to <a href="/upload">upload a new file</a>.</p>
     <a href="/folders/new">Add New Folder</a>
     <% if (docs.length > 0) { %>
-      <% docs.forEach(document => { %>
-          <!-- Differentiate between folders and files -->
-           <% if (document.sizeInBytes) { %>
-              <a href="/files/<%= document.name %>">
-                <span><%= document.name %></span>
-                <span><%= document.sizeInBytes %></span>
+      <div>
+        <% docs.forEach(document => { %>
+          <div>
+            <!-- Differentiate between folders and files -->
+            <% if (document.sizeInBytes) { %>
+                <a href="/files/<%= document.name %>"><%= document.name %></a>
+                <span><%= (Number(document.sizeInBytes) / 1000000).toFixed(2) %>MB</span>
                 <span><%- document.dateAdded %></span>
-           <% } else { %>
-              <a href="/folders/<%= document.name %>">
-                <span><%= document.name %></span>
-           <% } %>
-              </a>
-      <% }) %>
+            <% } else { %>
+                <a href="/folders/<%= document.name %>/edit">Edit</a>
+                <a href="/folders/<%= document.name %>"><%= document.name %></a>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
     <% } %>
   </body>
 </html>
