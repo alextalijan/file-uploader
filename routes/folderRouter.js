@@ -8,5 +8,6 @@ router.get('/new', isLoggedIn, controller.newFolderGet);
 router.post('/new', isLoggedIn, controller.newFolderPost);
 router.get('/:folderName/edit', isLoggedIn, controller.editFolderGet);
 router.post('/:folderName/edit', isLoggedIn, controller.editFolderPost);
+router.post('/:folderName/delete', isLoggedIn, controller.deleteFolder);
 
 module.exports = router;

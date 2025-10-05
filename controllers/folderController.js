@@ -69,4 +69,35 @@ module.exports = {
 
     res.redirect('/');
   },
+  deleteFolder: async (req, res) => {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        name: req.params.folderName,
+        userId: req.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    // Empty the folder of files inside it
+    await prisma.file.updateMany({
+      where: {
+        folderId: folder.id,
+      },
+      data: {
+        folderId: null,
+        userId: req.user.id,
+      },
+    });
+
+    // Delete the folder
+    await prisma.folder.delete({
+      where: {
+        id: folder.id,
+      },
+    });
+
+    res.redirect('/');
+  },
 };
