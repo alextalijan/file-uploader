@@ -41,4 +41,32 @@ module.exports = {
 
     res.render('editFolder', { folder });
   },
+  editFolderPost: async (req, res, next) => {
+    // First check if the new name is already in use
+    const folder = await prisma.folder.findFirst({
+      where: {
+        name: {
+          contains: req.body.rename.trim(),
+          mode: 'insensitive',
+        },
+        userId: req.user.id,
+      },
+    });
+    if (folder) {
+      return next(new Error('Folder name already in use.'));
+    }
+
+    // Update the name of the folder
+    await prisma.folder.updateMany({
+      where: {
+        name: req.params.folderName,
+        userId: req.user.id,
+      },
+      data: {
+        name: req.body.rename.trim(),
+      },
+    });
+
+    res.redirect('/');
+  },
 };
