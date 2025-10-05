@@ -25,14 +25,15 @@ model User {
   username String   @unique
   hash     String
   folders  Folder[]
+  files    File[]
 }
 
 model Folder {
   id     String @id @default(uuid())
   name   String
+  files  File[]
   user   User   @relation(fields: [userId], references: [id])
   userId String
-  files  File[]
 }
 
 model File {
@@ -41,6 +42,8 @@ model File {
   url         String
   sizeInBytes BigInt
   dateAdded   DateTime @default(now())
-  Folder      Folder?  @relation(fields: [folderId], references: [id])
+  folder      Folder?  @relation(fields: [folderId], references: [id])
   folderId    String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 }
