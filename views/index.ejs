@@ -9,5 +9,20 @@
     <a href="/logout">Log Out</a>
     <h1>Welcome, <%= user.username %>!</h1>
     <p>Click on the link to <a href="/upload">upload a new file</a>.</p>
+    <% if (docs.length > 0) { %>
+      <% docs.forEach(document => { %>
+          <!-- Differentiate between folders and files -->
+           <% if (document.sizeInBytes) { %>
+              <a href="/files/<%= document.name %>">
+                <span><%= document.name %></span>
+                <span><%= document.sizeInBytes %></span>
+                <span><%- document.dateAdded %></span>
+           <% } else { %>
+              <a href="/folders/<%= document.name %>">
+                <span><%= document.name %></span>
+           <% } %>
+              </a>
+      <% }) %>
+    <% } %>
   </body>
 </html>
