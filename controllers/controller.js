@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 const registerValidations = [
   body('username')
@@ -10,7 +11,7 @@ const registerValidations = [
     .isLength({ min: 3, max: 20 })
     .withMessage('Username must contain between 3 and 20 characters.')
     .custom((value) => {
-      return /\s/.test(value);
+      return !/\s/.test(value);
     })
     .withMessage('Username cannot contain any empty spaces.'),
   body('password')
@@ -18,7 +19,7 @@ const registerValidations = [
     .notEmpty()
     .withMessage('You must provide a password.')
     .custom((value) => {
-      return /\s/.test(value);
+      return !/\s/.test(value);
     })
     .withMessage('Password cannot contain any empty spaces.'),
   body('passwordConfirmation')
@@ -31,13 +32,15 @@ const registerValidations = [
 const prisma = new PrismaClient();
 
 module.exports = {
-  indexGet: (req, res) => {},
+  indexGet: (req, res) => {
+    res.render('index');
+  },
   registerGet: (req, res) => {
     res.render('register', { errors: null });
   },
   registerPost: [
     registerValidations,
-    async (req, res) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         res.locals.inputs = {
@@ -79,4 +82,13 @@ module.exports = {
       res.redirect('/login');
     },
   ],
+  loginGet: (req, res) => {
+    res.render('login');
+  },
+  loginPost: (req, res, next) => {
+    passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+    })(req, res, next);
+  },
 };
