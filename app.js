@@ -6,8 +6,8 @@ const { PrismaClient } = require('@prisma/client');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
-const controller = require('./controllers/controller');
 const path = require('path');
+const router = require('./routes/router');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -94,28 +94,13 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Middleware for protecting routes from logged out users
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-}
-
 // Load the locals with user
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
 
-app.get('/', isLoggedIn, controller.indexGet);
-app.get('/register', controller.registerGet);
-app.post('/register', controller.registerPost);
-app.get('/login', controller.loginGet);
-app.post('/login', controller.loginPost);
-app.get('/logout', isLoggedIn, controller.logout);
-app.get('/upload', isLoggedIn, controller.uploadFileGet);
+app.use('/', router);
 
 // Error catching middleware
 app.use((err, req, res, next) => {
