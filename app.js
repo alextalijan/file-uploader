@@ -6,11 +6,18 @@ const { PrismaClient } = require('@prisma/client');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
+const controller = require('./controllers/controller');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const controller = require('./controllers/controller');
+// Configure views for rendering pages
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// Allow app to parse form inputs
+app.use(express.urlencoded({ extended: true }));
 
 // Set up express session and use Prisma for store
 app.use(
@@ -85,7 +92,24 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-app.get('/', controller.indexGet);
+// Middleware for protecting routes from logged out users
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+// Load the locals with user
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
+app.get('/', isLoggedIn, controller.indexGet);
+app.get('/register', controller.registerGet);
+app.post('/register', controller.registerPost);
 
 app.listen(PORT, (err) => {
   if (err) {
