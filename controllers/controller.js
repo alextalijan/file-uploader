@@ -33,7 +33,7 @@ const prisma = new PrismaClient();
 module.exports = {
   indexGet: (req, res) => {},
   registerGet: (req, res) => {
-    res.render('register');
+    res.render('register', { errors: null });
   },
   registerPost: [
     registerValidations,
