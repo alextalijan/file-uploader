@@ -38,10 +38,12 @@ app.use(
   })
 );
 
+// Set up prisma client
+const prisma = new PrismaClient();
+
 // Set up passport local strategy
 passport.use(
   new LocalStrategy(async (username, password, done) => {
-    const prisma = new PrismaClient();
     let user;
     try {
       user = await prisma.user.findUnique({
@@ -110,6 +112,13 @@ app.use((req, res, next) => {
 app.get('/', isLoggedIn, controller.indexGet);
 app.get('/register', controller.registerGet);
 app.post('/register', controller.registerPost);
+app.get('/login', controller.loginGet);
+app.post('/login', controller.loginPost);
+
+// Error catching middleware
+app.use((err, req, res, next) => {
+  res.status(500).render('error', { message: err.message });
+});
 
 app.listen(PORT, (err) => {
   if (err) {
