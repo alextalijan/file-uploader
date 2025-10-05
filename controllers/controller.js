@@ -114,4 +114,29 @@ module.exports = {
 
     res.render('uploadFile', { folders });
   },
+  uploadFilePost: (req, res, next) => {
+    if (!req.files || req.files.length === 0) {
+      return next(new Error('No files uploaded.'));
+    }
+
+    // Check if a folder was selected in the form
+    let folder;
+    if (req.body.folder === 'none') {
+      folder = null;
+    } else {
+      folder = req.body.folder;
+    }
+
+    // Insert each file into database
+    req.files.forEach(async (file) => {
+      await prisma.file.create({
+        data: {
+          name: file.originalname,
+          url: file.path,
+          sizeInBytes: file.size,
+          folderId: folder,
+        },
+      });
+    });
+  },
 };

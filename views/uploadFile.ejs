@@ -12,11 +12,11 @@
       <select name="folder" id="folder">
         <option value="none" selected>None</option>
         <% folders.forEach(folder => { %>
-            <option value="<%= folder.name %>"><%= folder.name.toUpperCase() %></option>
+            <option value="<%= folder.id %>"><%= folder.name.toUpperCase() %></option>
         <% }) %>
       </select>
-      <label for="file">Choose File:</label>
-      <input type="file" name="file" />
+      <label for="files">Choose Files:</label>
+      <input type="file" name="files" id="files" />
       <button type="submit">Upload</button>
     </form>
   </body>
