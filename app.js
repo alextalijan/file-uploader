@@ -114,6 +114,7 @@ app.get('/register', controller.registerGet);
 app.post('/register', controller.registerPost);
 app.get('/login', controller.loginGet);
 app.post('/login', controller.loginPost);
+app.get('/logout', isLoggedIn, controller.logout);
 
 // Error catching middleware
 app.use((err, req, res, next) => {
