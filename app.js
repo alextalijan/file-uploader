@@ -115,6 +115,7 @@ app.post('/register', controller.registerPost);
 app.get('/login', controller.loginGet);
 app.post('/login', controller.loginPost);
 app.get('/logout', isLoggedIn, controller.logout);
+app.get('/upload', isLoggedIn, controller.uploadFileGet);
 
 // Error catching middleware
 app.use((err, req, res, next) => {

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload File</title>
+  </head>
+  <body>
+    <h1>Upload a File</h1>
+    <form action="/upload" method="POST">
+      <label for="folder">Folder:</label>
+      <select name="folder" id="folder">
+        <% folders.forEach(folder => { %>
+            <option value="<%= folder.name %>"><%= folder.name.toUpperCase() %></option>
+        <% }) %>
+      </select>
+      <label for="file">Choose File:</label>
+      <input type="file" name="file" />
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>

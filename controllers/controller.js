@@ -100,4 +100,18 @@ module.exports = {
       res.redirect('/login');
     });
   },
+  uploadFileGet: async (req, res, next) => {
+    let folders;
+    try {
+      folders = await prisma.folder.findMany({
+        where: {
+          userId: req.user.id,
+        },
+      });
+    } catch (err) {
+      return next(err);
+    }
+
+    res.render('uploadFile', { folders });
+  },
 };
