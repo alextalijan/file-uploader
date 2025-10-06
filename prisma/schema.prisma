@@ -37,13 +37,14 @@ model Folder {
 }
 
 model File {
-  id          String   @id @default(uuid())
-  name        String
-  url         String
-  sizeInBytes BigInt
-  dateAdded   DateTime @default(now())
-  folder      Folder?  @relation(fields: [folderId], references: [id])
-  folderId    String?
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
+  id           String   @id @default(uuid())
+  name         String
+  url          String
+  sizeInBytes  BigInt
+  cloudinaryId String
+  dateAdded    DateTime @default(now())
+  folder       Folder?  @relation(fields: [folderId], references: [id])
+  folderId     String?
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
 }
