@@ -142,31 +142,18 @@ module.exports = {
       folder = req.body.folder;
     }
 
-    // If a folder was provided, insert all files into that folder
-    if (folder) {
-      req.files.forEach(async (file) => {
-        await prisma.file.create({
-          data: {
-            name: file.originalname,
-            url: file.path,
-            sizeInBytes: file.size,
-            folderId: folder,
-          },
-        });
+    // Insert all files into db
+    req.files.forEach(async (file) => {
+      await prisma.file.create({
+        data: {
+          name: file.originalname,
+          url: file.path,
+          sizeInBytes: file.size,
+          folderId: folder,
+          userId: req.user.id,
+        },
       });
-    } else {
-      // Else, add these files to the user without having a parent folder
-      req.files.forEach(async (file) => {
-        await prisma.file.create({
-          data: {
-            name: file.originalname,
-            url: file.path,
-            sizeInBytes: file.size,
-            userId: req.user.id,
-          },
-        });
-      });
-    }
+    });
 
     res.redirect('/');
   },
