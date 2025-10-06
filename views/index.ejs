@@ -17,11 +17,11 @@
             <!-- Differentiate between folders and files -->
             <% if (document.sizeInBytes) { %>
                 <a href="/files/<%= document.name %>"><%= document.name %></a>
-                <span><%= (Number(document.sizeInBytes) / 1000000).toFixed(2) %>MB</span>
-                <span><%- document.dateAdded %></span>
+                <span>FILE</span>
             <% } else { %>
                 <a href="/folders/<%= document.name %>/edit">Edit</a>
                 <a href="/folders/<%= document.name %>"><%= document.name %></a>
+                <span>FOLDER</span>
             <% } %>
           </div>
         <% }) %>

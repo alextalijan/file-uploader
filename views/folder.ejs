@@ -13,7 +13,6 @@
             <div>
               <a href="/files/<%= file.name %>"><%= file.name %></a>
               <span><%= (Number(file.sizeInBytes) / 1000000).toFixed(2) %>MB</span>
-              <span><%- file.dateAdded %></span>
             </div>
         <% }) %>
       </div>
