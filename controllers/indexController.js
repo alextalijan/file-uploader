@@ -42,6 +42,7 @@ module.exports = {
     const soloFiles = await prisma.file.findMany({
       where: {
         userId: req.user.id,
+        folderId: null,
       },
     });
 
