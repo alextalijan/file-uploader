@@ -4,7 +4,7 @@ const cloudinary = require('cloudinary').v2;
 const prisma = new PrismaClient();
 
 module.exports = {
-  fileGet: async (req, res) => {
+  fileGet: async (req, res, next) => {
     const file = await prisma.file.findFirst({
       where: {
         name: req.params.fileName,
@@ -14,6 +14,12 @@ module.exports = {
         folder: true,
       },
     });
+
+    // If the file doesn't exist, return error
+    if (!file) {
+      return next(new Error('File does not exist.'));
+    }
+
     const folders = await prisma.folder.findMany({
       where: {
         userId: req.user.id,
@@ -23,12 +29,7 @@ module.exports = {
     res.render('file', { file, folders });
   },
   changeFolder: async (req, res) => {
-    let folderId;
-    if (req.body.folder === 'none') {
-      folderId = null;
-    } else {
-      folderId = req.body.folder;
-    }
+    const folderId = req.body.folder === 'none' ? null : req.body.folder;
 
     // Change the folder a file belongs in
     await prisma.file.updateMany({
@@ -65,6 +66,11 @@ module.exports = {
           cloudinaryId: true,
         },
       });
+
+      // If the file doesn't exist, return error
+      if (!file) {
+        return next(new Error('File does not exist.'));
+      }
 
       // Delete the file from cloudinary first
       await cloudinary.uploader.destroy(file.cloudinaryId);
