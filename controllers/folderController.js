@@ -100,4 +100,17 @@ module.exports = {
 
     res.redirect('/');
   },
+  folderGet: async (req, res) => {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        name: req.params.folderName,
+        userId: req.user.id,
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    res.render('folder', { folder });
+  },
 };

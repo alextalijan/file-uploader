@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= folder.name %></title>
+  </head>
+  <body>
+    <h1><%= folder.name %></h1>
+    <% if (folder) { %>
+      <div>
+        <% folder.files.forEach(file => { %>
+            <div>
+              <a href="/files/<%= file.name %>"><%= file.name %></a>
+              <span><%= (Number(file.sizeInBytes) / 1000000).toFixed(2) %>MB</span>
+              <span><%- file.dateAdded %></span>
+            </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </body>
+</html>
