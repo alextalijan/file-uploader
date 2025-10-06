@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
+const fs = require('fs');
 
 cloudinary.config({
   cloud_name: 'dkmou1awr',
@@ -138,32 +139,40 @@ module.exports = {
 
     res.render('uploadFile', { folders });
   },
-  uploadFilePost: (req, res, next) => {
+  uploadFilePost: async (req, res, next) => {
     if (!req.files || req.files.length === 0) {
       return next(new Error('No files uploaded.'));
     }
 
     // Check if a folder was selected in the form
-    let folder;
-    if (req.body.folder === 'none') {
-      folder = null;
-    } else {
-      folder = req.body.folder;
-    }
+    const folder = req.body.folder === 'none' ? null : req.body.folder;
 
     // Insert all files into db
-    req.files.forEach(async (file) => {
-      await prisma.file.create({
-        data: {
-          name: file.originalname,
-          url: file.path,
-          sizeInBytes: file.size,
-          folderId: folder,
-          userId: req.user.id,
-        },
-      });
-    });
+    try {
+      await Promise.all(
+        req.files.map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path, {
+            folder: `file-uploader/files/${req.user.id}/${req.body.folder || ''}`,
+          });
 
-    res.redirect('/');
+          await fs.promises.unlink(file.path);
+
+          await prisma.file.create({
+            data: {
+              name: file.originalname,
+              url: result.secure_url,
+              cloudinaryId: result.public_id,
+              sizeInBytes: file.size,
+              folderId: folder,
+              userId: req.user.id,
+            },
+          });
+        })
+      );
+
+      res.redirect('/');
+    } catch (err) {
+      next(err);
+    }
   },
 };
