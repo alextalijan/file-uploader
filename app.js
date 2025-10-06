@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const indexRouter = require('./routes/indexRouter');
 const folderRouter = require('./routes/folderRouter');
+const fileController = require('./routes/fileRouter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -103,6 +104,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/folders', folderRouter);
+app.use('/files', fileController);
 
 // Error catching middleware
 app.use((err, req, res, next) => {
