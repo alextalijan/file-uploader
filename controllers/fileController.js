@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const cloudinary = require('cloudinary').v2;
 
 const prisma = new PrismaClient();
 
@@ -51,6 +52,34 @@ module.exports = {
       res.redirect(`/folders/${folder.name}`);
     } else {
       res.redirect('/');
+    }
+  },
+  deleteFile: async (req, res, next) => {
+    try {
+      const file = await prisma.file.findFirst({
+        where: {
+          name: req.params.fileName,
+          userId: req.user.id,
+        },
+        select: {
+          cloudinaryId: true,
+        },
+      });
+
+      // Delete the file from cloudinary first
+      await cloudinary.uploader.destroy(file.cloudinaryId);
+
+      // Delete the file from the database
+      await prisma.file.deleteMany({
+        where: {
+          name: req.params.fileName,
+          userId: req.user.id,
+        },
+      });
+
+      res.redirect('/');
+    } catch (err) {
+      next(err);
     }
   },
 };

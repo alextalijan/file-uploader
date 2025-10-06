@@ -27,5 +27,9 @@
       </select>
       <button type="submit">Change</button>
     </form>
+    <h2>Delete File</h2>
+    <form action="/files/<%= file.name %>/delete" method="POST">
+      <button type="submit">Delete</button>
+    </form>
   </body>
 </html>

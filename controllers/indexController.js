@@ -6,13 +6,6 @@ const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 const fs = require('fs');
 
-cloudinary.config({
-  cloud_name: 'dkmou1awr',
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-});
-
 const registerValidations = [
   body('username')
     .trim()

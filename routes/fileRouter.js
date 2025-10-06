@@ -6,5 +6,6 @@ const router = Router();
 
 router.get('/:fileName', isLoggedIn, controller.fileGet);
 router.post('/:fileName/change-folder', isLoggedIn, controller.changeFolder);
+router.post('/:fileName/delete', isLoggedIn, controller.deleteFile);
 
 module.exports = router;
