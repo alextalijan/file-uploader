@@ -31,13 +31,18 @@ module.exports = {
 
     res.redirect('/');
   },
-  editFolderGet: async (req, res) => {
+  editFolderGet: async (req, res, next) => {
     const folder = await prisma.folder.findFirst({
       where: {
         name: req.params.folderName,
         userId: req.user.id,
       },
     });
+
+    // If the folder doesn't exist, return error
+    if (!folder) {
+      return next(new Error('Folder does not exist.'));
+    }
 
     res.render('editFolder', { folder });
   },
@@ -69,7 +74,7 @@ module.exports = {
 
     res.redirect('/');
   },
-  deleteFolder: async (req, res) => {
+  deleteFolder: async (req, res, next) => {
     const folder = await prisma.folder.findFirst({
       where: {
         name: req.params.folderName,
@@ -79,6 +84,11 @@ module.exports = {
         id: true,
       },
     });
+
+    // If the folder doesn't exist, stop them from deleting
+    if (!folder) {
+      return next(new Error('Folder that does not exist cannot be deleted.'));
+    }
 
     // Empty the folder of files inside it
     await prisma.file.updateMany({
@@ -100,7 +110,7 @@ module.exports = {
 
     res.redirect('/');
   },
-  folderGet: async (req, res) => {
+  folderGet: async (req, res, next) => {
     const folder = await prisma.folder.findFirst({
       where: {
         name: req.params.folderName,
@@ -110,6 +120,11 @@ module.exports = {
         files: true,
       },
     });
+
+    // If the folder doesn't exist, return error
+    if (!folder) {
+      return next(new Error('Folder does not exist.'));
+    }
 
     res.render('folder', { folder });
   },
