@@ -151,13 +151,12 @@ module.exports = {
             : 'raw';
 
           const result = await cloudinary.uploader.upload(file.path, {
-            resource_type: ['video', 'image'].includes(fileType)
-              ? fileType
-              : 'raw',
+            resource_type: fileType === 'raw' ? 'raw' : fileType,
             asset_folder: `file-uploader/files/${req.user.id}/${req.body.folder || ''}`,
-            public_id: ['video', 'image'].includes(fileType)
-              ? file.originalname.split('.')[0]
-              : file.originalname,
+            public_id:
+              fileType === 'raw'
+                ? file.originalname
+                : file.originalname.split('.')[0],
             display_name: file.originalname,
           });
 
@@ -171,7 +170,7 @@ module.exports = {
               url: result.secure_url,
               cloudinaryId: result.public_id,
               sizeInBytes: file.size,
-              type: file.mimetype.split('/')[0],
+              type: fileType,
               folderId: folder,
               userId: req.user.id,
             },

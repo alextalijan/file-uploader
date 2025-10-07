@@ -76,9 +76,7 @@ module.exports = {
 
       // Delete the file from cloudinary first
       await cloudinary.uploader.destroy(file.cloudinaryId, {
-        resource_type: ['video', 'image'].includes(file.type)
-          ? file.type
-          : 'raw',
+        resource_type: file.type === 'raw' ? 'raw' : file.type,
       });
 
       // Delete the file from the database
