@@ -19,5 +19,6 @@ router.post(
   upload.array('files', 10),
   controller.uploadFilePost
 );
+router.get('/share/:folderId', controller.sharedFolderGet);
 
 module.exports = router;

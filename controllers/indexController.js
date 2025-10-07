@@ -181,4 +181,22 @@ module.exports = {
       next(err);
     }
   },
+  sharedFolderGet: async (req, res, next) => {
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id: req.params.folderId,
+      },
+      include: {
+        user: true,
+        files: true,
+      },
+    });
+
+    // Check if the date for share has passed before accessing it
+    if (folder.shareExpires < new Date()) {
+      return next(new Error('Share has expired.'));
+    }
+
+    res.render('sharedFolder', { folder });
+  },
 };
