@@ -144,8 +144,6 @@ module.exports = {
     try {
       await Promise.all(
         req.files.map(async (file) => {
-          console.log(file);
-          console.log(file.mimetype);
           const fileType = ['video', 'image'].includes(
             file.mimetype.split('/')[0]
           )
@@ -163,6 +161,8 @@ module.exports = {
             display_name: file.originalname,
           });
 
+          console.log(result);
+
           await fs.promises.unlink(file.path);
 
           await prisma.file.create({
@@ -171,6 +171,7 @@ module.exports = {
               url: result.secure_url,
               cloudinaryId: result.public_id,
               sizeInBytes: file.size,
+              type: file.mimetype.split('/')[0],
               folderId: folder,
               userId: req.user.id,
             },

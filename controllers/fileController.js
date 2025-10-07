@@ -65,6 +65,7 @@ module.exports = {
         },
         select: {
           cloudinaryId: true,
+          type: true,
         },
       });
 
@@ -74,7 +75,11 @@ module.exports = {
       }
 
       // Delete the file from cloudinary first
-      await cloudinary.uploader.destroy(file.cloudinaryId);
+      await cloudinary.uploader.destroy(file.cloudinaryId, {
+        resource_type: ['video', 'image'].includes(file.type)
+          ? file.type
+          : 'raw',
+      });
 
       // Delete the file from the database
       await prisma.file.deleteMany({

@@ -41,6 +41,7 @@ model File {
   name         String
   url          String
   sizeInBytes  BigInt
+  type         String
   cloudinaryId String
   dateAdded    DateTime @default(now())
   folder       Folder?  @relation(fields: [folderId], references: [id])
