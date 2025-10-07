@@ -231,6 +231,9 @@ module.exports = {
       return next(new Error('Share has expired.'));
     }
 
+    // Enable page to show url for going back to the shared folder
+    res.locals.folderId = req.params.folderId;
+
     res.render('sharedFile', { file });
   },
 };

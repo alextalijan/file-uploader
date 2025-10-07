@@ -6,6 +6,7 @@
     <title><%= file.name %></title>
   </head>
   <body>
+    <a href="/share/<%= locals.folderId %>">Go back to shared folder</a>
     <h1><%= file.name %></h1>
     <span
       >Size: <%= (Number(file.sizeInBytes) / 1000000).toFixed(2) %> MBs</span

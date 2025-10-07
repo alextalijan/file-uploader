@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const cloudinary = require('cloudinary').v2;
-const axios = require('axios');
+const downloadFileFromCloudinary = require('../utils/downloadFileFromCloudinary');
 
 const prisma = new PrismaClient();
 
@@ -101,7 +101,8 @@ module.exports = {
       next(err);
     }
   },
-  downloadFile: async (req, res) => {
+  downloadFile: async (req, res, next) => {
+    const user = req.user;
     const file = await prisma.file.findFirst({
       where: {
         name: req.params.fileName,
@@ -111,15 +112,26 @@ module.exports = {
         cloudinaryId: true,
         url: true,
         name: true,
+        user: true,
       },
     });
 
-    // Fetch the file from Cloudinary
-    const response = await axios.get(file.url, { responseType: 'stream' });
+    // If the file doesn't exist, stop them from proceeding
+    if (!file) {
+      return next(new Error('File does not exist.'));
+    }
 
-    // Force download with proper filename
-    res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
-    res.setHeader('Content-Type', response.headers['content-type']); // preserve file type
-    response.data.pipe(res); // Sends downloaded file to the client
+    // Check if the owner is trying to access the file
+    if (user && user.id === file.user.id) {
+      return downloadFileFromCloudinary(file, res);
+    }
+
+    // Check if the file has been shared for download
+    if (file.shareExpires > new Date()) {
+      return downloadFileFromCloudinary(file, res);
+    }
+
+    // Else, the user is unauthorized to download
+    next(new Error('You are not authorized to download this file.'));
   },
 };
