@@ -144,8 +144,23 @@ module.exports = {
     try {
       await Promise.all(
         req.files.map(async (file) => {
+          console.log(file);
+          console.log(file.mimetype);
+          const fileType = ['video', 'image'].includes(
+            file.mimetype.split('/')[0]
+          )
+            ? file.mimetype.split('/')[0]
+            : 'raw';
+
           const result = await cloudinary.uploader.upload(file.path, {
-            folder: `file-uploader/files/${req.user.id}/${req.body.folder || ''}`,
+            resource_type: ['video', 'image'].includes(fileType)
+              ? fileType
+              : 'raw',
+            asset_folder: `file-uploader/files/${req.user.id}/${req.body.folder || ''}`,
+            public_id: ['video', 'image'].includes(fileType)
+              ? file.originalname.split('.')[0]
+              : file.originalname,
+            display_name: file.originalname,
           });
 
           await fs.promises.unlink(file.path);

@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const cloudinary = require('cloudinary').v2;
+const axios = require('axios');
 
 const prisma = new PrismaClient();
 
@@ -87,5 +88,26 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  downloadFile: async (req, res) => {
+    const file = await prisma.file.findFirst({
+      where: {
+        name: req.params.fileName,
+        userId: req.user.id,
+      },
+      select: {
+        cloudinaryId: true,
+        url: true,
+        name: true,
+      },
+    });
+
+    // Fetch the file from Cloudinary
+    const response = await axios.get(file.url, { responseType: 'stream' });
+
+    // Force download with proper filename
+    res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+    res.setHeader('Content-Type', response.headers['content-type']); // preserve file type
+    response.data.pipe(res); // Sends downloaded file to the client
   },
 };
