@@ -29,11 +29,12 @@ model User {
 }
 
 model Folder {
-  id     String @id @default(uuid())
-  name   String
-  files  File[]
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  id           String   @id @default(uuid())
+  name         String
+  files        File[]
+  shareExpires DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
 }
 
 model File {

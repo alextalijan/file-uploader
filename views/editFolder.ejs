@@ -13,6 +13,19 @@
       <input type="text" name="rename" id="rename" />
       <button>Rename</button>
     </form>
+    <h2>Share Folder</h2>
+    <% if (folder.shareExpires < new Date()) { %>
+      <form action="/folders/<%= folder.name %>/share" method="POST">
+        <label for="duration">Duration:</label>
+        <select name="duration" id="duration">
+          <option value="day">1 Day</option>
+          <option value="week">7 Days</option>
+        </select>
+        <button type="submit">Share</button>
+      </form>
+    <% } else { %>
+      <p>This folder has already been shared. It can be accessed <a href="/share/<%= folder.id %>">here</a> until <%= folder.shareExpires %>.</p>
+    <% } %>
     <h2>Delete</h2>
     <p>
       Deleting a folder will not delete the files within. They will just be left
