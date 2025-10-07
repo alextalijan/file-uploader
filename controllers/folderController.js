@@ -149,7 +149,12 @@ module.exports = {
         shareExpires: date,
         files: {
           updateMany: {
-            shareExpires: date,
+            where: {
+              folderId: folder.id,
+            },
+            data: {
+              shareExpires: date,
+            },
           },
         },
       },
