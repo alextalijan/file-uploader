@@ -108,6 +108,7 @@ module.exports = {
         url: true,
         name: true,
         user: true,
+        shareExpires: true,
       },
     });
 
