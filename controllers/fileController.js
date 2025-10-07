@@ -42,7 +42,7 @@ module.exports = {
     // Change the folder a file belongs in
     await prisma.file.update({
       where: {
-        id: req.params.itemId,
+        id: req.params.fileId,
       },
       data: {
         folderId: folderId === null ? null : folder.id,
