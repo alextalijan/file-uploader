@@ -32,10 +32,9 @@ module.exports = {
     res.redirect('/');
   },
   editFolderGet: async (req, res, next) => {
-    const folder = await prisma.folder.findFirst({
+    const folder = await prisma.folder.findUnique({
       where: {
-        name: req.params.folderName,
-        userId: req.user.id,
+        id: req.params.folderId,
       },
     });
 
@@ -62,10 +61,9 @@ module.exports = {
     }
 
     // Update the name of the folder
-    await prisma.folder.updateMany({
+    await prisma.folder.update({
       where: {
-        name: req.params.folderName,
-        userId: req.user.id,
+        id: req.params.folderId,
       },
       data: {
         name: req.body.rename.trim(),
@@ -75,10 +73,9 @@ module.exports = {
     res.redirect('/');
   },
   deleteFolder: async (req, res, next) => {
-    const folder = await prisma.folder.findFirst({
+    const folder = await prisma.folder.findUnique({
       where: {
-        name: req.params.folderName,
-        userId: req.user.id,
+        id: req.params.folderId,
       },
       select: {
         id: true,
@@ -97,7 +94,6 @@ module.exports = {
       },
       data: {
         folderId: null,
-        userId: req.user.id,
       },
     });
 
@@ -111,10 +107,9 @@ module.exports = {
     res.redirect('/');
   },
   folderGet: async (req, res, next) => {
-    const folder = await prisma.folder.findFirst({
+    const folder = await prisma.folder.findUnique({
       where: {
-        name: req.params.folderName,
-        userId: req.user.id,
+        id: req.params.folderId,
       },
       include: {
         files: true,
@@ -129,10 +124,9 @@ module.exports = {
     res.render('folder', { folder });
   },
   shareFolder: async (req, res) => {
-    const folder = await prisma.folder.findFirst({
+    const folder = await prisma.folder.findUnique({
       where: {
-        name: req.params.folderName,
-        userId: req.user.id,
+        id: req.params.folderId,
       },
     });
 

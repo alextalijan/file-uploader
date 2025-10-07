@@ -16,11 +16,11 @@
           <div>
             <!-- Differentiate between folders and files -->
             <% if (document.sizeInBytes) { %>
-                <a href="/files/<%= document.name %>"><%= document.name %></a>
+                <a href="/files/<%= document.id %>"><%= document.name %></a>
                 <span>FILE</span>
             <% } else { %>
-                <a href="/folders/<%= document.name %>/edit">Edit</a>
-                <a href="/folders/<%= document.name %>"><%= document.name %></a>
+                <a href="/folders/<%= document.id %>/edit">Edit</a>
+                <a href="/folders/<%= document.id %>"><%= document.name %></a>
                 <span>FOLDER</span>
             <% } %>
           </div>

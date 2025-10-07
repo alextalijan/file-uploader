@@ -8,14 +8,14 @@
   <body>
     <h1><%= folder.name %></h1>
     <h2>Rename</h2>
-    <form action="/folders/<%= folder.name %>/edit" method="POST">
+    <form action="/folders/<%= folder.id %>/edit" method="POST">
       <label for="rename">New Name:</label>
       <input type="text" name="rename" id="rename" />
       <button>Rename</button>
     </form>
     <h2>Share Folder</h2>
     <% if (folder.shareExpires < new Date()) { %>
-      <form action="/folders/<%= folder.name %>/share" method="POST">
+      <form action="/folders/<%= folder.id %>/share" method="POST">
         <label for="duration">Duration:</label>
         <select name="duration" id="duration">
           <option value="1">1 Day</option>
@@ -31,7 +31,7 @@
       Deleting a folder will not delete the files within. They will just be left
       fatherless.
     </p>
-    <form action="/folders/<%= folder.name %>/delete" method="POST">
+    <form action="/folders/<%= folder.id %>/delete" method="POST">
       <button type="submit">Delete</button>
     </form>
   </body>

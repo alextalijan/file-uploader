@@ -4,9 +4,9 @@ const isLoggedIn = require('../utils/isLoggedIn');
 
 const router = Router();
 
-router.get('/:fileName', isLoggedIn, controller.fileGet);
-router.post('/:fileName/change-folder', isLoggedIn, controller.changeFolder);
-router.post('/:fileName/delete', isLoggedIn, controller.deleteFile);
-router.get('/:fileName/download', controller.downloadFile);
+router.get('/:fileId', isLoggedIn, controller.fileGet);
+router.post('/:fileId/change-folder', isLoggedIn, controller.changeFolder);
+router.post('/:fileId/delete', isLoggedIn, controller.deleteFile);
+router.get('/:fileId/download', controller.downloadFile);
 
 module.exports = router;

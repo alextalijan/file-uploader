@@ -11,9 +11,9 @@
       >Size: <%= (Number(file.sizeInBytes) / 1000000).toFixed(2) %> MBs</span
     >
     <span>Date Added: <%= file.dateAdded %></span>
-    <a href="/files/<%= file.name %>/download">Download</a>
+    <a href="/files/<%= file.id %>/download">Download</a>
     <h2>Change Folder</h2>
-    <form action="/files/<%= file.name %>/change-folder" method="POST">
+    <form action="/files/<%= file.id %>/change-folder" method="POST">
       <label for="folder">Folder:</label>
       <select name="folder" id="folder">
         <option value="none">None</option>
@@ -28,7 +28,7 @@
       <button type="submit">Change</button>
     </form>
     <h2>Delete File</h2>
-    <form action="/files/<%= file.name %>/delete" method="POST">
+    <form action="/files/<%= file.id %>/delete" method="POST">
       <button type="submit">Delete</button>
     </form>
   </body>

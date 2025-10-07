@@ -6,10 +6,9 @@ const prisma = new PrismaClient();
 
 module.exports = {
   fileGet: async (req, res, next) => {
-    const file = await prisma.file.findFirst({
+    const file = await prisma.file.findUnique({
       where: {
-        name: req.params.fileName,
-        userId: req.user.id,
+        id: req.params.fileId,
       },
       include: {
         folder: true,
@@ -41,10 +40,9 @@ module.exports = {
     }
 
     // Change the folder a file belongs in
-    await prisma.file.updateMany({
+    await prisma.file.update({
       where: {
-        name: req.params.itemName,
-        userId: req.user.id,
+        id: req.params.itemId,
       },
       data: {
         folderId: folderId === null ? null : folder.id,
@@ -60,17 +58,16 @@ module.exports = {
         },
       });
 
-      res.redirect(`/folders/${folder.name}`);
+      res.redirect(`/folders/${folder.id}`);
     } else {
       res.redirect('/');
     }
   },
   deleteFile: async (req, res, next) => {
     try {
-      const file = await prisma.file.findFirst({
+      const file = await prisma.file.findUnique({
         where: {
-          name: req.params.fileName,
-          userId: req.user.id,
+          id: req.params.fileId,
         },
         select: {
           cloudinaryId: true,
@@ -89,10 +86,9 @@ module.exports = {
       });
 
       // Delete the file from the database
-      await prisma.file.deleteMany({
+      await prisma.file.delete({
         where: {
-          name: req.params.fileName,
-          userId: req.user.id,
+          id: req.params.fileId,
         },
       });
 
@@ -103,10 +99,9 @@ module.exports = {
   },
   downloadFile: async (req, res, next) => {
     const user = req.user;
-    const file = await prisma.file.findFirst({
+    const file = await prisma.file.findUnique({
       where: {
-        name: req.params.fileName,
-        userId: req.user.id,
+        id: req.params.fileId,
       },
       select: {
         cloudinaryId: true,
