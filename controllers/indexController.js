@@ -204,12 +204,22 @@ module.exports = {
 
     res.render('sharedFolder', { folder });
   },
-  sharedFileGet: async (req, res) => {
+  sharedFileGet: async (req, res, next) => {
     const file = await prisma.file.findUnique({
       where: {
         id: req.params.fileId,
       },
     });
+
+    // If the file doesn't exist, stop them from going futher
+    if (!file) {
+      return next(new Error('File does not exist.'));
+    }
+
+    // If the share has expired, don't load the page
+    if (file.shareExpires < new Date()) {
+      return next(new Error('Share has expired.'));
+    }
 
     res.render('sharedFile', { file });
   },
