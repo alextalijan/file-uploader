@@ -128,4 +128,29 @@ module.exports = {
 
     res.render('folder', { folder });
   },
+  shareFolder: async (req, res) => {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        name: req.params.folderName,
+        userId: req.user.id,
+      },
+    });
+
+    // Create the date the share expires at
+    const date = new Date();
+    date.setDate(date.getDate() + Number(req.body.duration));
+
+    // Update the expiration date
+    await prisma.folder.update({
+      where: {
+        id: folder.id,
+      },
+      data: {
+        shareExpires: date,
+      },
+    });
+
+    // Redirect the user to shared folder
+    res.redirect(`/share/${folder.id}`);
+  },
 };
