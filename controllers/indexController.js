@@ -160,9 +160,7 @@ module.exports = {
             display_name: file.originalname,
           });
 
-          console.log(result);
-
-          await fs.promises.unlink(file.path);
+          await fs.promises.rm(file.path);
 
           await prisma.file.create({
             data: {
