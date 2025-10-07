@@ -138,7 +138,15 @@ module.exports = {
     }
 
     // Check if a folder was selected in the form
-    const folder = req.body.folder === 'none' ? null : req.body.folder;
+    const folderId = req.body.folder === 'none' ? null : req.body.folder;
+    let folder;
+    if (folderId) {
+      folder = await prisma.folder.findUnique({
+        where: {
+          id: folderId,
+        },
+      });
+    }
 
     // Insert all files into db
     try {
@@ -169,7 +177,9 @@ module.exports = {
               cloudinaryId: result.public_id,
               sizeInBytes: file.size,
               type: fileType,
-              folderId: folder,
+              shareExpires:
+                folderId === null ? new Date() : folder.shareExpires,
+              folderId: folderId === null ? null : folder.id,
               userId: req.user.id,
             },
           });

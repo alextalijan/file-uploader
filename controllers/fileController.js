@@ -31,6 +31,14 @@ module.exports = {
   },
   changeFolder: async (req, res) => {
     const folderId = req.body.folder === 'none' ? null : req.body.folder;
+    let folder;
+    if (folderId) {
+      folder = await prisma.folder.findUnique({
+        where: {
+          id: folderId,
+        },
+      });
+    }
 
     // Change the folder a file belongs in
     await prisma.file.updateMany({
@@ -39,7 +47,8 @@ module.exports = {
         userId: req.user.id,
       },
       data: {
-        folderId,
+        folderId: folderId === null ? null : folder.id,
+        shareExpires: folderId === null ? new Date() : folder.shareExpires,
       },
     });
 
