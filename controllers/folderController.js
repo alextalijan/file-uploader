@@ -147,6 +147,11 @@ module.exports = {
       },
       data: {
         shareExpires: date,
+        files: {
+          updateMany: {
+            shareExpires: date,
+          },
+        },
       },
     });
 

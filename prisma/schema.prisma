@@ -45,6 +45,7 @@ model File {
   type         String
   cloudinaryId String
   dateAdded    DateTime @default(now())
+  shareExpires DateTime @default(now())
   folder       Folder?  @relation(fields: [folderId], references: [id])
   folderId     String?
   user         User     @relation(fields: [userId], references: [id])
