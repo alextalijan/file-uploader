@@ -20,5 +20,6 @@ router.post(
   controller.uploadFilePost
 );
 router.get('/share/:folderId', controller.sharedFolderGet);
+router.get('/share/:folderId/:fileId', controller.sharedFileGet);
 
 module.exports = router;

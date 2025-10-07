@@ -192,11 +192,25 @@ module.exports = {
       },
     });
 
+    // Check if the folder even exists
+    if (!folder) {
+      return next(new Error('Folder does not exist.'));
+    }
+
     // Check if the date for share has passed before accessing it
     if (folder.shareExpires < new Date()) {
       return next(new Error('Share has expired.'));
     }
 
     res.render('sharedFolder', { folder });
+  },
+  sharedFileGet: async (req, res) => {
+    const file = await prisma.file.findUnique({
+      where: {
+        id: req.params.fileId,
+      },
+    });
+
+    res.render('sharedFile', { file });
   },
 };
